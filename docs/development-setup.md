@@ -460,6 +460,6 @@ docker compose build --no-cache
 
 ## Next Steps
 
-- [Environment Configuration](./environment-config.md) - All variables explained
-- [Architecture](./architecture.md) - Understand the system design
-- [API Documentation](../rediver-api/docs/api/) - API reference
+- [Environment Configuration](./operations/configuration.md) - All variables explained
+- [Architecture](./architecture/overview.md) - Understand the system design
+- [API Documentation](./api/reference.md) - API reference

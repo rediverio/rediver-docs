@@ -294,6 +294,6 @@ Authorization: Bearer <access_token>
 
 ## Related Documentation
 
-- [Multi-tenancy Guide](./multi-tenancy-guide.md)
-- [Permissions Matrix](./permissions-matrix.md)
-- [API Reference](./api-reference.md)
+- [Multi-tenancy Guide](./multi-tenancy.md)
+- [Permissions Matrix](./permissions.md)
+- [API Reference](../api/reference.md)

@@ -1,151 +1,119 @@
 # ReDiver - CTEM Platform
 
-**Continuous Threat Exposure Management Platform**
+<p align="center">
+  <strong>Continuous Threat Exposure Management Platform</strong>
+</p>
 
-ReDiver giúp tổ chức quản lý rủi ro bảo mật thông qua quy trình CTEM 5 giai đoạn:
+<p align="center">
+  <a href="https://rediver.io">Website</a> •
+  <a href="https://app.rediver.io">Platform</a> •
+  <a href="https://api.rediver.io/docs">API Docs</a> •
+  <a href="docs/getting-started.md">Getting Started</a>
+</p>
+
+---
+
+ReDiver helps organizations manage security risks through the **CTEM 5-stage process**:
+
 **Scoping** → **Discovery** → **Prioritization** → **Validation** → **Mobilization**
 
 ---
 
-## Architecture
-
-| Service | Description | Tech Stack |
-|---------|-------------|------------|
-| **rediver-api** | Backend REST API | Go 1.25, Chi, PostgreSQL 17, Redis 7 |
-| **rediver-ui** | Frontend Application | Next.js 16, React 19, TypeScript, Tailwind 4 |
-| **rediver-keycloak** | Identity Provider (Optional) | Keycloak 24+ |
-
----
-
-## Documentation
+## 📚 Documentation
 
 ### Getting Started
-| Document | Description |
-|----------|-------------|
-| [Getting Started](./getting-started.md) | Quick start guide (10 min) |
-| [Development Setup](./development-setup.md) | IDE, debugging, testing |
-| [Environment Configuration](./environment-config.md) | All environment variables |
-| [Troubleshooting](./troubleshooting.md) | Common issues and solutions |
+- [Quick Start](docs/getting-started.md) - Get up and running
+- [Development Setup](docs/development-setup.md) - IDE, debugging, testing
+- [Configuration](docs/operations/configuration.md) - Environment variables
 
-### Authentication & Security
-| Document | Description |
-|----------|-------------|
-| [Authentication Guide](./authentication-guide.md) | Login flow, JWT, sessions |
-| [Multi-Tenancy Guide](./multi-tenancy-guide.md) | Teams, tenant switching |
-| [Permissions Matrix](./permissions-matrix.md) | Role-based access control |
+### Guides
+- [Authentication](docs/guides/authentication.md) - Login flow, JWT, sessions
+- [Multi-tenancy](docs/guides/multi-tenancy.md) - Teams, tenant switching
+- [Permissions](docs/guides/permissions.md) - Role-based access control
 
-### Architecture & API
-| Document | Description |
-|----------|-------------|
-| [Architecture](./architecture.md) | System design overview |
-| [API Reference](./api-reference.md) | Complete API endpoints |
+### Reference
+- [API Reference](docs/api/reference.md) - Complete API endpoints
+- [Architecture](docs/architecture/overview.md) - System design
+
+### Operations
+- [Troubleshooting](docs/operations/troubleshooting.md) - Common issues
 
 ---
 
-## Quick Start
-
-### Prerequisites
-
-| Tool | Version | Check |
-|------|---------|-------|
-| Docker | 24+ | `docker -v` |
-| Node.js | 20+ | `node -v` |
-| Go | 1.25+ | `go version` |
-
-### Start with Docker
+## 🚀 Quick Start
 
 ```bash
+# Clone repository
 git clone https://github.com/rediverio/rediver.git
 cd rediver
 
-# Configure environment
+# Configure
 cd rediver-api && cp .env.example .env && cd ..
 cd rediver-ui && cp .env.example .env.local && cd ..
 
-# Start all services
+# Start with Docker
 docker compose up -d
 ```
 
-### Verify
-
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:8080 |
-| API Docs | http://localhost:8080/docs |
+| Service | Local | Production |
+|---------|-------|------------|
+| Frontend | http://localhost:3000 | https://app.rediver.io |
+| Backend API | http://localhost:8080 | https://api.rediver.io |
+| API Docs | http://localhost:8080/docs | https://api.rediver.io/docs |
 
 ---
 
-## CTEM 5-Stage Process
+## 🛠 Tech Stack
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  1. SCOPING     │  2. DISCOVERY   │  3. PRIORITIZATION          │
-│  Define attack  │  Identify       │  Rank exposures by          │
-│  surface scope  │  assets, repos  │  severity, SLA, risk        │
-├─────────────────┴─────────────────┴─────────────────────────────┤
-│  4. VALIDATION                    │  5. MOBILIZATION            │
-│  Verify exploitability,           │  Remediation workflows,     │
-│  pen testing, scans               │  assign, track, resolve     │
-└───────────────────────────────────┴─────────────────────────────┘
-```
+| Component | Technologies |
+|-----------|-------------|
+| **Backend** | Go 1.25, Chi, PostgreSQL 17, Redis 7 |
+| **Frontend** | Next.js 16, React 19, TypeScript, Tailwind 4 |
+| **Auth** | JWT (local) / Keycloak (OIDC) |
 
 ---
 
-## Multi-Tenancy
+## 🤝 Contributing
 
-- **Tenant** (API) = **Team** (UI)
-- Users can belong to multiple teams
-- Data isolation per tenant
-- Role-based permissions: **Owner > Admin > Member > Viewer**
+We welcome contributions! Please see:
 
-```
-User → Login → Select Team → Access Token (scoped to team) → API
-```
+- [Contributing Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
 
 ---
 
-## Service Ports
+## 💖 Support
 
-| Service | Port |
-|---------|------|
-| Frontend | 3000 |
-| Backend API | 8080 |
-| Keycloak | 8180 |
-| PostgreSQL | 5432 |
-| Redis | 6379 |
+If you find ReDiver useful, consider supporting the project:
 
----
-
-## Key Commands
-
-### Backend
-```bash
-make dev              # Run with hot reload
-make test             # Run tests
-make migrate-up       # Database migrations
-make lint             # Code linting
+**BSC Network (BEP-20):**
 ```
-
-### Frontend
-```bash
-npm run dev           # Development server
-npm run build         # Production build
-npm run test          # Run tests
-npm run lint          # ESLint
+0x97f0891b4a682904a78e6Bc854a58819Ea972454
 ```
 
 ---
 
-## Contributing
+## 📦 Repositories
 
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/name`
-3. Commit with conventional commits: `feat:`, `fix:`, `docs:`
-4. Push and open Pull Request
+| Repository | Description |
+|------------|-------------|
+| [rediver-api](https://github.com/rediverio/rediver-api) | Backend REST API (Go) |
+| [rediver-ui](https://github.com/rediverio/rediver-ui) | Frontend Application (Next.js) |
+| [rediver-keycloak](https://github.com/rediverio/rediver-keycloak) | Keycloak Configuration |
+| [rediver-schemas](https://github.com/rediverio/rediver-schemas) | Database Schemas |
+| [rediver-docs](https://github.com/rediverio/rediver-docs) | Documentation |
 
 ---
 
-## License
+## 📧 Contact
 
-MIT License - see [LICENSE](../rediver-api/LICENSE)
+- **Website:** https://rediver.io
+- **Email:** rediverio@gmail.com
+- **GitHub:** https://github.com/rediverio
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](https://github.com/rediverio/rediver-api/blob/main/LICENSE)

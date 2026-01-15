@@ -229,6 +229,6 @@ middleware.RequireMembership(tenantRepo)
 
 ## Related Documentation
 
-- [Authentication Guide](./authentication-guide.md)
-- [Permissions Matrix](./permissions-matrix.md)
-- [API Reference](./api-reference.md)
+- [Authentication Guide](./authentication.md)
+- [Permissions Matrix](./permissions.md)
+- [API Reference](../api/reference.md)

@@ -214,13 +214,13 @@ docker compose restart postgres
 ## Next Steps
 
 - [Development Setup](./development-setup.md) - IDE setup, debugging, testing
-- [Environment Configuration](./environment-config.md) - All environment variables
-- [Architecture](./architecture.md) - System design and patterns
-- [API Documentation](../rediver-api/docs/api/) - API reference
+- [Environment Configuration](./operations/configuration.md) - All environment variables
+- [Architecture](./architecture/overview.md) - System design and patterns
+- [API Documentation](./api/reference.md) - API reference
 
 ## Getting Help
 
-- Check [Troubleshooting Guide](./troubleshooting.md)
+- Check [Troubleshooting Guide](./operations/troubleshooting.md)
 - Search [GitHub Issues](https://github.com/rediverio/rediver/issues)
 - Create a new issue with:
   - OS and versions
