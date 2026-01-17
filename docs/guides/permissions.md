@@ -22,7 +22,7 @@ Ma trận phân quyền chính xác cho Rediver CTEM Platform.
 
 ## Complete Role → Permissions Mapping
 
-### 📋 Owner Permissions (40 permissions)
+### 📋 Owner Permissions (41 permissions)
 
 ```
 # Resource Access
@@ -38,7 +38,7 @@ audit:read
 reports:read, reports:write
 
 # Security Operations
-scans:read, scans:write
+scans:read, scans:write, scans:delete
 credentials:read, credentials:write
 pentest:read, pentest:write
 remediation:read, remediation:write
@@ -57,7 +57,7 @@ integrations:read, integrations:manage
 
 ---
 
-### 🛡️ Admin Permissions (37 permissions)
+### 🛡️ Admin Permissions (38 permissions)
 
 ```
 # Resource Access (SAME AS OWNER)
@@ -73,7 +73,7 @@ audit:read
 reports:read, reports:write
 
 # Security Operations (SAME AS OWNER)
-scans:read, scans:write
+scans:read, scans:write, scans:delete
 credentials:read, credentials:write
 pentest:read, pentest:write
 remediation:read, remediation:write
@@ -114,6 +114,7 @@ reports:read, reports:write
 
 # Security Operations
 scans:read, scans:write
+⛔ scans:delete
 credentials:read
 ⛔ credentials:write
 pentest:read, pentest:write
@@ -196,6 +197,7 @@ integrations:read
 | **Scans** ||||
 | `scans:read` | ✅ | ✅ | ✅ | ✅ |
 | `scans:write` | ✅ | ✅ | ✅ | ❌ |
+| `scans:delete` | ✅ | ✅ | ❌ | ❌ |
 | **Credentials** ||||
 | `credentials:read` | ✅ | ✅ | ✅ | ✅ |
 | `credentials:write` | ✅ | ✅ | ❌ | ❌ |

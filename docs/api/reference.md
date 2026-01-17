@@ -295,6 +295,50 @@ Asset-scoped:
 
 ---
 
+## Scan Endpoints (CTEM Scanning)
+
+**Prefix:** `/api/v1/scans`
+
+Scan configurations bind asset groups with scanners/workflows and schedules.
+
+### Scan CRUD
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/` | `scans:read` | List scans |
+| GET | `/stats` | `scans:read` | Scan statistics |
+| GET | `/{id}` | `scans:read` | Get scan |
+| POST | `/` | `scans:write` | Create scan |
+| PUT | `/{id}` | `scans:write` | Update scan |
+| DELETE | `/{id}` | `scans:delete` | Delete scan |
+
+### Scan Status Operations
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| POST | `/{id}/activate` | `scans:write` | Activate scan (enable scheduling) |
+| POST | `/{id}/pause` | `scans:write` | Pause scan (suspend scheduling) |
+| POST | `/{id}/disable` | `scans:write` | Disable scan |
+
+### Scan Execution
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| POST | `/{id}/trigger` | `scans:write` | Trigger scan execution manually |
+| POST | `/{id}/clone` | `scans:write` | Clone scan configuration |
+
+### Scan Runs (Sub-resource)
+
+**Prefix:** `/api/v1/scans/{scanId}/runs`
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/` | `scans:read` | List runs for scan |
+| GET | `/latest` | `scans:read` | Get latest run |
+| GET | `/{runId}` | `scans:read` | Get specific run |
+
+---
+
 ## Error Responses
 
 ```json
