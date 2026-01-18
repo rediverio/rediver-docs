@@ -179,7 +179,7 @@ agent:
   scan_interval: 1h
   heartbeat_interval: 1m
 
-rediver:
+server:
   base_url: https://api.rediver.io
   api_key: ${API_KEY}      # Source API key
   source_id: ${SOURCE_ID}  # Registered source ID

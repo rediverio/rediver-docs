@@ -191,7 +191,7 @@ collectors:
       - org/repo2
     poll_interval: 1h            # Collect from GitHub every hour
 
-rediver:
+server:
   base_url: https://api.rediver.io
   api_key: ${API_KEY}
   source_id: ${SOURCE_ID}

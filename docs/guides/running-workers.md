@@ -125,7 +125,7 @@ agent:
   heartbeat_interval: 1m             # How often to send heartbeat
 
 # Rediver Platform Connection
-rediver:
+server:
   base_url: https://api.rediver.io   # Your Rediver API URL
   api_key: rdw_xxxxxxxxxxxxxxxxxx    # API key from Step 2
   worker_id: 76d81868-25cd-...       # Optional: Worker UUID from UI
@@ -328,7 +328,7 @@ scan_options:
 5. Use it in your agent config:
 
 ```yaml
-rediver:
+server:
   asset_id: "550e8400-e29b-41d4-a716-446655440000"  # Asset UUID from UI
 ```
 

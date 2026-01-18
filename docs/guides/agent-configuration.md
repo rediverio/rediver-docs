@@ -19,7 +19,7 @@ cp agent.yaml.template agent.yaml
 
 2. Update with your settings:
 ```yaml
-rediver:
+server:
   base_url: "https://api.rediver.io"
   api_key: "your-api-key"
 ```

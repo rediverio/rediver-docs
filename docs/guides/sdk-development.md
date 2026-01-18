@@ -549,7 +549,7 @@ agent:
   heartbeat_interval: 1m
   verbose: true
 
-rediver:
+server:
   base_url: https://api.rediver.io
   api_key: ${API_KEY}
   timeout: 30s
