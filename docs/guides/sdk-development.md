@@ -1,5 +1,8 @@
 ---
 layout: default
+title: SDK Development
+parent: Guides
+nav_order: 8
 ---
 # Rediver SDK Development Guide
 

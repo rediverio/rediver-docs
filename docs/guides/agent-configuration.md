@@ -1,5 +1,8 @@
 ---
 layout: default
+title: Agent Configuration
+parent: Guides
+nav_order: 14
 ---
 # Agent Configuration Guide
 
@@ -36,7 +39,7 @@ agent -config agent.yaml -daemon
 agent:
   name: "My Scanner"
 
-rediver:
+server:
   base_url: "https://api.rediver.io"
   api_key: "your-api-key"
 
@@ -56,13 +59,14 @@ agent:
   heartbeat_interval: 1m
   log_level: info
 
-# Rediver Platform
-rediver:
+# Platform Connection
+server:
   base_url: "https://api.rediver.io"
   api_key: "your-api-key"
   worker_id: ""  # Auto-generated if empty
   timeout: 30s
   max_retries: 3
+  retry_delay: 2s
 
 # Scanners
 scanners:
@@ -87,6 +91,16 @@ ci:
   comments: true
   push: true
   fail_on: critical
+
+# Advanced
+advanced:
+  max_concurrent: 2
+  scan_timeout: 30m
+  cache_dir: /tmp/app-cache
+  exclude:
+    - "**/node_modules/**"
+    - "**/vendor/**"
+    - "**/.git/**"
 ```
 
 ---
@@ -103,7 +117,7 @@ ci:
 | `heartbeat_interval` | duration | `1m` | Heartbeat frequency |
 | `log_level` | string | `info` | Log level: debug, info, warn, error |
 
-### Rediver Section
+### Server Section
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|

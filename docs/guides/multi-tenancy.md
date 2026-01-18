@@ -1,19 +1,22 @@
 ---
 layout: default
+title: Multi-Tenancy
+parent: Guides
+nav_order: 2
 ---
 # Multi-Tenancy Guide
 
-Hướng dẫn về kiến trúc multi-tenant trong Rediver CTEM Platform.
+Guide to multi-tenant architecture in the Rediver CTEM Platform.
 
 ---
 
 ## Overview
 
-Rediver sử dụng **multi-tenant architecture** với:
+Rediver uses a **multi-tenant architecture** with:
 - **Tenant** (API) = **Team** (UI)
-- Mỗi user có thể thuộc nhiều tenants
-- Mỗi tenant có data isolation riêng
-- Access token được scoped theo tenant
+- Each user can belong to multiple tenants
+- Each tenant has isolated data
+- Access tokens are scoped to a specific tenant
 
 ---
 
@@ -47,7 +50,7 @@ Rediver sử dụng **multi-tenant architecture** với:
 | **Member** | 2 | Create/edit resources |
 | **Viewer** | 1 | Read-only access |
 
-Chi tiết: [Permissions Matrix](./permissions-matrix.md)
+Details: [Permissions Matrix](./permissions.md)
 
 ---
 
@@ -75,7 +78,7 @@ Login → Multiple tenants → Show selector → User picks → Exchange token �
 
 ## Create First Team
 
-User đăng ký mới không có team. Flow:
+New users registering without a team use this flow:
 
 ```
 POST /api/v1/auth/create-first-team
@@ -102,18 +105,18 @@ Response:
 
 ## Tenant Switching
 
-Để switch sang tenant khác:
+To switch to a different tenant:
 
-1. Gọi `/api/v1/auth/token` với tenant_id mới
-2. Cập nhật cookies
-3. Reload hoặc navigate
+1. Call `/api/v1/auth/token` with the new tenant_id
+2. Update cookies
+3. Reload or navigate
 
 ```typescript
 // Frontend
 async function switchTenant(tenantId: string) {
   const result = await selectTenantAction(tenantId)
   if (result.success) {
-    router.refresh() // Reload với tenant mới
+    router.refresh() // Reload with new tenant
   }
 }
 ```
@@ -122,7 +125,7 @@ async function switchTenant(tenantId: string) {
 
 ## Token-Based Tenant Scoping
 
-Access token chứa `tenant_id`:
+The access token contains the `tenant_id`:
 
 ```json
 {
@@ -135,15 +138,15 @@ Access token chứa `tenant_id`:
 ```
 
 **Security benefits:**
-- Không thể IDOR (access other tenant's data)
-- Backend extract tenant từ token, không từ URL
+- Prevents IDOR (accessing other tenant's data)
+- Backend extracts tenant from token, not from URL
 - Token exchange requires valid membership
 
 ---
 
 ## Data Isolation
 
-Mọi tenant-scoped resource đều có `tenant_id`:
+All tenant-scoped resources have a `tenant_id`:
 
 ```sql
 -- Assets
@@ -156,7 +159,7 @@ SELECT * FROM findings WHERE tenant_id = $1;
 SELECT * FROM audit_logs WHERE tenant_id = $1;
 ```
 
-Middleware `RequireTenant()` validates token có `tenant_id`.
+The `RequireTenant()` middleware validates that the token has a valid `tenant_id`.
 
 ---
 

@@ -1,5 +1,8 @@
 ---
 layout: default
+title: Docker Deployment
+parent: Guides
+nav_order: 13
 ---
 # Docker Deployment Guide
 

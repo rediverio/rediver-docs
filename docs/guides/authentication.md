@@ -1,37 +1,40 @@
 ---
 layout: default
+title: Authentication
+parent: Guides
+nav_order: 1
 ---
 # Authentication Guide
 
-Hướng dẫn chi tiết về authentication trong Rediver CTEM Platform.
+Detailed guide for authentication in the Rediver CTEM Platform.
 
 ---
 
 ## Authentication Modes
 
-| Mode | Description | Sử dụng |
-|------|-------------|---------|
-| `local` | Email/Password với JWT | Development, simple deployments |
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| `local` | Email/Password with JWT | Development, simple deployments |
 | `oidc` | Keycloak/OIDC only | Enterprise SSO |
-| `hybrid` | Cả local và OIDC | Flexible authentication |
+| `hybrid` | Both local and OIDC | Flexible authentication |
 
-Cấu hình qua `AUTH_PROVIDER` environment variable.
+Configure via the `AUTH_PROVIDER` environment variable.
 
 ---
 
 ## Token Types
 
 ### Refresh Token (Global)
-- **Thời hạn:** 7 ngày
-- **Scope:** User-level (không có tenant)
+- **Lifetime:** 7 days
+- **Scope:** User-level (no tenant)
 - **Storage:** httpOnly cookie
-- **Dùng để:** Exchange cho access_token
+- **Purpose:** Exchange for access_token
 
 ### Access Token (Tenant-scoped)
-- **Thời hạn:** 15 phút
+- **Lifetime:** 15 minutes
 - **Scope:** Tenant-specific
 - **Storage:** httpOnly cookie
-- **Dùng để:** API requests
+- **Purpose:** API requests
 
 ---
 
@@ -93,7 +96,7 @@ Response:
 
 ### 3. Token Exchange
 
-Sau khi login, exchange refresh_token để lấy tenant-scoped access_token:
+After login, exchange the refresh_token to get a tenant-scoped access_token:
 
 ```
 POST /api/v1/auth/token
@@ -117,7 +120,7 @@ Response:
 
 ### 4. Token Refresh
 
-Access token hết hạn → refresh với rotation:
+When access token expires, refresh with rotation:
 
 ```
 POST /api/v1/auth/refresh
@@ -127,7 +130,7 @@ POST /api/v1/auth/refresh
 }
 ```
 
-Response bao gồm cả access_token mới và refresh_token mới (rotation).
+Response includes both a new access_token and a new refresh_token (rotation).
 
 ### 5. Logout
 
@@ -194,9 +197,9 @@ Authorization: Bearer <access_token>
 ### CSRF Protection
 
 Double-submit cookie pattern:
-1. Server generates `csrf_token` và set trong cookie
-2. Client đọc cookie và gửi trong header `X-CSRF-Token`
-3. Server verify header matches cookie
+1. Server generates `csrf_token` and sets it in a cookie
+2. Client reads the cookie and sends it in the `X-CSRF-Token` header
+3. Server verifies the header matches the cookie
 
 ---
 

@@ -1,5 +1,8 @@
 ---
 layout: default
+title: System Overview
+parent: Architecture
+nav_order: 1
 ---
 # Architecture Overview
 
@@ -44,6 +47,7 @@ This document describes the architecture of the ReDiver platform.
 - Tailwind CSS 4
 - shadcn/ui components
 - Zustand (global state)
+- SWR (data fetching)
 
 **Architecture Pattern:** Feature-based architecture
 
@@ -55,13 +59,44 @@ src/
 │   ├── api/               # API routes (BFF pattern)
 │   └── layout.tsx         # Root layout
 │
-├── features/              # Feature modules
-│   └── [feature]/
-│       ├── components/    # Feature-specific components
-│       ├── actions/       # Server Actions
-│       ├── schemas/       # Zod validation schemas
-│       ├── types/         # TypeScript types
-│       └── hooks/         # Feature hooks
+├── features/              # Feature modules (26 modules)
+│   │ # Assets & Discovery
+│   ├── assets/            # Asset management
+│   ├── asset-groups/      # Asset organization
+│   ├── asset-types/       # Asset type definitions
+│   ├── repositories/      # Code repositories
+│   ├── components/        # Software components
+│   ├── attack-surface/    # Attack surface view
+│   │
+│   │ # Security
+│   ├── findings/          # Vulnerability findings
+│   ├── scans/             # Scan jobs
+│   ├── scan-profiles/     # Scan configurations
+│   ├── pentest/           # Pentest management
+│   ├── remediation/       # Remediation tracking
+│   │
+│   │ # Tools & Workers
+│   ├── tools/             # Tool registry
+│   ├── workers/           # Scanner agents
+│   ├── agents/            # Agent management
+│   │
+│   │ # Configuration
+│   ├── scope/             # Scope configuration
+│   ├── scm-connections/   # SCM integrations
+│   ├── integrations/      # External integrations
+│   │
+│   │ # Platform
+│   ├── dashboard/         # Main dashboard
+│   ├── auth/              # Authentication
+│   ├── tenant/            # Tenant/Team management
+│   ├── organization/      # Organization settings
+│   │
+│   │ # Business
+│   ├── business-units/    # Business unit tracking
+│   ├── crown-jewels/      # Critical assets
+│   ├── compliance/        # Compliance tracking
+│   ├── identities/        # Identity management
+│   └── shared/            # Shared utilities
 │
 ├── components/            # Shared components
 │   ├── ui/               # shadcn/ui primitives
@@ -89,37 +124,77 @@ cmd/
 └── server/               # Application entry point
 
 internal/
-├── domain/               # Core Business Logic (innermost layer)
+├── domain/               # Core Business Logic (innermost layer) - 24 modules
 │   ├── shared/          # Shared domain types (ID, errors)
+│   │
+│   │ # Asset & Discovery
 │   ├── asset/           # Asset management
 │   ├── assetgroup/      # Asset grouping/organization
 │   ├── assettype/       # Asset type definitions
-│   ├── audit/           # Audit logging
 │   ├── branch/          # Git branch management
 │   ├── component/       # Software components (SBOM)
-│   ├── permission/      # Permission definitions
 │   ├── scmconnection/   # SCM integrations (GitHub, GitLab)
-│   ├── scope/           # Scope configuration (targets, exclusions)
-│   ├── session/         # User sessions
-│   ├── sla/             # SLA management
+│   │
+│   │ # Security
+│   ├── vulnerability/   # Vulnerability/Finding tracking
+│   ├── scan/            # Scan jobs
+│   ├── scanprofile/     # Scan configurations
+│   ├── scansession/     # Agent scan tracking
+│   │
+│   │ # Tools & Workers
+│   ├── tool/            # Security tools registry
+│   ├── toolcategory/    # Tool categorization
+│   ├── worker/          # Scanner/Agent workers
+│   ├── command/         # Remote commands for agents
+│   ├── pipeline/        # Workflow pipelines
+│   ├── datasource/      # Data ingestion sources
+│   │
+│   │ # Platform
 │   ├── tenant/          # Multi-tenancy
 │   ├── user/            # User management
-│   └── vulnerability/   # Vulnerability tracking
+│   ├── session/         # User sessions
+│   ├── permission/      # Permission definitions
+│   ├── scope/           # Scope configuration
+│   ├── sla/             # SLA management
+│   └── audit/           # Audit logging
 │
-├── app/                  # Application Layer (use cases)
+├── app/                  # Application Layer (use cases) - 28 services
 │   ├── asset_service.go
 │   ├── asset_group_service.go
+│   ├── asset_type_service.go
+│   ├── auth_service.go
+│   ├── attack_surface_service.go
+│   ├── audit_service.go
+│   ├── branch_service.go
+│   ├── command_service.go
+│   ├── component_service.go
+│   ├── dashboard_service.go
+│   ├── email_service.go
+│   ├── finding_comment_service.go
+│   ├── ingest_service.go
+│   ├── oauth_service.go
+│   ├── pipeline_service.go
+│   ├── scan_service.go
+│   ├── scanprofile_service.go
+│   ├── scansession_service.go
+│   ├── scm_connection_service.go
 │   ├── scope_service.go
+│   ├── session_service.go
+│   ├── sla_service.go
+│   ├── tenant_service.go
+│   ├── tool_service.go
+│   ├── toolcategory_service.go
+│   ├── user_service.go
 │   ├── vulnerability_service.go
-│   └── ...              # 18 services total
+│   └── worker_service.go
 │
 └── infra/               # Infrastructure Layer (outermost layer)
     ├── http/            # HTTP adapter
     │   ├── server.go    # HTTP server
-    │   ├── router.go    # Route definitions
-    │   ├── handler/     # HTTP handlers (15+)
+    │   ├── routes.go    # Route definitions
+    │   ├── handler/     # HTTP handlers (30+)
     │   └── middleware/  # HTTP middleware
-    ├── postgres/        # PostgreSQL adapter (15+ repositories)
+    ├── postgres/        # PostgreSQL adapter (24+ repositories)
     └── redis/           # Redis adapter
         └── cache.go
 
@@ -318,42 +393,108 @@ HTTP Request
 
 ## Database Schema
 
-### Core Tables
+### Table Overview (31 Migrations)
+
+| Category | Tables |
+|----------|--------|
+| **Auth & Users** | users, sessions, user_tenants |
+| **Multi-tenancy** | tenants, tenant_members, tenant_invitations |
+| **Assets** | assets, asset_groups, asset_types, asset_group_members |
+| **Security** | vulnerabilities, findings, finding_comments, exposures |
+| **Components** | components, branches |
+| **Scans** | scans, scan_profiles, scan_sessions |
+| **Tools** | tools, tool_categories |
+| **Workers** | workers, commands, data_sources |
+| **Workflows** | pipelines, pipeline_stages, pipeline_runs, pipeline_stage_runs |
+| **Configuration** | scope_configurations, scm_connections, sla_policies |
+| **Audit** | audit_logs |
+
+### Key Tables
 
 ```sql
--- Users table
-CREATE TABLE users (
-    id UUID PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),
-    role VARCHAR(50) NOT NULL DEFAULT 'user',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Assets table
+-- Multi-tenant assets (all resources are tenant-scoped)
 CREATE TABLE assets (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(50) NOT NULL,
+    value TEXT NOT NULL,
     criticality VARCHAR(20) DEFAULT 'medium',
     status VARCHAR(20) DEFAULT 'active',
+    risk_score INTEGER DEFAULT 0,
+    owner VARCHAR(255),
+    owner_email VARCHAR(255),
+    business_unit VARCHAR(255),
     metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_by UUID REFERENCES users(id),
+    worker_id UUID REFERENCES workers(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Exposures table
-CREATE TABLE exposures (
-    id UUID PRIMARY KEY,
+-- Findings with deduplication
+CREATE TABLE findings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     asset_id UUID REFERENCES assets(id),
+    worker_id UUID REFERENCES workers(id),
+    scan_session_id UUID REFERENCES scan_sessions(id),
+    fingerprint TEXT NOT NULL,          -- deduplication key
     title VARCHAR(500) NOT NULL,
+    description TEXT,
+    type VARCHAR(50) NOT NULL,          -- vulnerability, secret, etc.
     severity VARCHAR(20) NOT NULL,
+    confidence INTEGER DEFAULT 70,
     status VARCHAR(20) DEFAULT 'open',
-    source VARCHAR(50),
-    details JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    location JSONB,
+    vulnerability JSONB,
+    remediation JSONB,
+    first_seen_at TIMESTAMPTZ DEFAULT NOW(),
+    last_seen_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(tenant_id, fingerprint)
+);
+
+-- Workers (scanners, agents, collectors)
+CREATE TABLE workers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL,          -- scanner, agent, collector
+    status VARCHAR(20) DEFAULT 'inactive',
+    api_key_hash TEXT NOT NULL,
+    capabilities TEXT[],
+    last_heartbeat_at TIMESTAMPTZ,
+    config JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tool categories
+CREATE TABLE tool_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    name VARCHAR(50) NOT NULL,
+    display_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    icon VARCHAR(50) DEFAULT 'folder',
+    color VARCHAR(20) DEFAULT 'gray',
+    is_builtin BOOLEAN NOT NULL DEFAULT false,
+    sort_order INTEGER DEFAULT 0,
+    UNIQUE NULLS NOT DISTINCT (tenant_id, name)
+);
+
+-- Scan sessions (agent execution tracking)
+CREATE TABLE scan_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    worker_id UUID REFERENCES workers(id),
+    tool_id UUID REFERENCES tools(id),
+    scan_id UUID REFERENCES scans(id),
+    status VARCHAR(20) DEFAULT 'pending',
+    target TEXT,
+    started_at TIMESTAMPTZ,
+    completed_at TIMESTAMPTZ,
+    findings_count INTEGER DEFAULT 0,
+    error_message TEXT
 );
 ```
 

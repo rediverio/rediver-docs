@@ -1,11 +1,14 @@
 ---
 layout: default
+title: Permissions Matrix
+parent: Guides
+nav_order: 3
 ---
 # Permission Matrix
 
-Ma trận phân quyền chính xác cho Rediver CTEM Platform.
+Exact permission matrix for the Rediver CTEM Platform.
 
-> Mapping từ `internal/domain/permission/role_mapping.go`
+> Mapping from `internal/domain/permission/role_mapping.go`
 
 ---
 
@@ -234,7 +237,7 @@ integrations:read
 
 ## How Permissions Work
 
-1. **Token Generation**: Khi user exchange token cho tenant, role được map thành permissions:
+1. **Token Generation**: When a user exchanges a token for a tenant, the role is mapped to permissions:
    ```go
    // jwt.go
    permissions := roleToPermissions(tenant.Role)
@@ -246,7 +249,7 @@ integrations:read
    }
    ```
 
-2. **Permission Check**: API routes kiểm tra permission từ token:
+2. **Permission Check**: API routes check permissions from the token:
    ```go
    // routes.go
    r.GET("/", h.List, middleware.Require(permission.AssetsRead))
