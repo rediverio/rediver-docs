@@ -1,3 +1,11 @@
+---
+layout: default
+title: Authentication
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 1
+---
+
 # Authentication Documentation
 
 Complete documentation for Keycloak authentication integration.

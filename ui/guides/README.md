@@ -1,10 +1,18 @@
-# Development Guides
+---
+layout: default
+title: Guides Overview
+parent: UI Guides
+grand_parent: UI Documentation
+nav_order: 1
+---
 
-Guides and best practices for developing in the UI codebase.
+# UI Development Guides Overview
 
-## content
+This section contains comprehensive development guides for the Next.js UI.
 
-- **[API Integration](./API_INTEGRATION.md)**: How to use the HTTP client, SWR hooks, and handle errors.
-- **[Assets API Integration](./ASSETS_API_INTEGRATION.md)**: Specific guide for the Assets module.
-- **[Customize Types](./CUSTOMIZE_TYPES_GUIDE.md)**: How to extend and override TypeScript types.
-- **[Organizing Types](./ORGANIZING_TYPES_AT_SCALE.md)**: Best practices for managing types in a large project.
+## Available Guides
+
+- **[API Integration](./API_INTEGRATION.md)** - HTTP client setup and SWR hooks
+- **[Assets API Integration](./ASSETS_API_INTEGRATION.md)** - Assets-specific API guide
+- **[Customize Types](./CUSTOMIZE_TYPES_GUIDE.md)** - TypeScript type customization
+- **[Organizing Types at Scale](./ORGANIZING_TYPES_AT_SCALE.md)** - Type management best practices

@@ -1,10 +1,18 @@
-# Operations & Deployment
+---
+layout: default
+title: Operations Overview
+parent: UI Operations
+grand_parent: UI Documentation
+nav_order: 1
+---
 
-Guides for deploying, configuring, and monitoring the application.
+# UI Operations Overview
 
-## Content
+This section contains operational guides for deploying and running the UI in production.
 
-- **[Deployment Guide](./DEPLOYMENT.md)**: Strategies for Vercel, Docker, and Traditional Servers.
-- **[Environment Variables](./ENVIRONMENT_VARIABLES.md)**: Configuration guide and security best practices.
-- **[Docker & Sentry](./DOCKER_SENTRY_SETUP.md)**: Container setup and error tracking.
-- **[Production Checklist](./PRODUCTION_CHECKLIST.md)**: Verification steps before going live.
+## Available Guides
+
+- **[Deployment](./DEPLOYMENT.md)** - Deploy to Vercel, Docker, or VPS
+- **[Environment Variables](./ENVIRONMENT_VARIABLES.md)** - Configuration reference
+- **[Docker & Sentry Setup](./DOCKER_SENTRY_SETUP.md)** - Containerization and error tracking
+- **[Production Checklist](./PRODUCTION_CHECKLIST.md)** - Pre-deployment verification

@@ -1,3 +1,11 @@
+---
+layout: default
+title: Keycloak Setup
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 4
+---
+
 # Keycloak Setup Guide
 
 Complete guide to set up Keycloak authentication for this Next.js application.

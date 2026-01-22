@@ -1,4 +1,13 @@
-# API Reference
+```
+---
+layout: default
+title: API Reference
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 2
+---
+
+# Keycloak Authentication API Reference
 
 Complete API documentation for Keycloak authentication library.
 

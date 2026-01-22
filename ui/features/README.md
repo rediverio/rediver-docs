@@ -1,8 +1,16 @@
-# Feature Documentation
+---
+layout: default
+title: Features Overview
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 1
+---
 
-Documentation for specific business features and modules.
+# UI Features Overview
 
-## Content
+This section contains documentation for key UI features.
 
-- **[Authentication](./auth/README.md)**: Keycloak integration, login flows, and token management.
-- **[Access Control](./ACCESS_CONTROL.md)**: Group-based permission system and role management.
+## Available Features
+
+- **[Authentication](./auth/README.md)** - Keycloak OIDC integration
+- **[Access Control](./ACCESS_CONTROL.md)** - Group-based permissions and RBAC

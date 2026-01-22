@@ -1,4 +1,12 @@
-# Migration Guide
+---
+layout: default
+title: Migration Guide
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 5
+---
+
+# Migration Guide: Upgrading Authentication to Keycloak.
 
 Step-by-step guide to migrate from old authentication to Keycloak.
 

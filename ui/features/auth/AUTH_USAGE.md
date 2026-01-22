@@ -1,3 +1,11 @@
+---
+layout: default
+title: Authentication Usage
+parent: UI Features
+grand_parent: UI Documentation
+nav_order: 3
+---
+
 # Authentication Usage Guide
 
 Practical examples for implementing Keycloak authentication in your Next.js app.
