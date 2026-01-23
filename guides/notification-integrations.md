@@ -271,11 +271,11 @@ Every notification sent is recorded for audit purposes.
 3. Select **View History** or navigate to the History page
 4. View sent notifications with status (success/failed)
 
-### View History via API
+### View Events via API
 
 ```bash
-# Get notification history for a channel
-curl /api/v1/integrations/{integration-id}/notification-history?limit=50 \
+# Get notification events for a channel
+curl /api/v1/integrations/{integration-id}/notification-events?limit=50 \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -284,36 +284,42 @@ curl /api/v1/integrations/{integration-id}/notification-history?limit=50 \
 {
   "data": [
     {
-      "id": "hist-123",
-      "integration_id": "int-456",
+      "id": "evt-123",
+      "tenant_id": "tenant-456",
+      "event_type": "new_finding",
+      "aggregate_type": "finding",
       "title": "New Critical Finding: Semgrep",
       "body": "SQL Injection vulnerability detected",
       "severity": "critical",
-      "status": "success",
-      "message_id": "slack-msg-789",
-      "sent_at": "2025-01-22T10:30:00Z"
-    },
-    {
-      "id": "hist-124",
-      "integration_id": "int-456",
-      "title": "Test Notification",
-      "body": "This is a test...",
-      "severity": "low",
-      "status": "failed",
-      "error_message": "Invalid webhook URL",
-      "sent_at": "2025-01-22T10:25:00Z"
+      "status": "completed",
+      "integrations_total": 2,
+      "integrations_matched": 1,
+      "integrations_succeeded": 1,
+      "integrations_failed": 0,
+      "send_results": [
+        {
+          "integration_id": "int-456",
+          "name": "Security Alerts",
+          "provider": "slack",
+          "status": "success",
+          "message_id": "slack-msg-789",
+          "sent_at": "2025-01-22T10:30:00Z"
+        }
+      ],
+      "processed_at": "2025-01-22T10:30:00Z"
     }
-  ]
+  ],
+  "total": 1
 }
 ```
 
-### History Status Values
+### Event Status Values
 
 | Status | Description |
 |--------|-------------|
-| `pending` | Notification queued but not yet sent |
-| `success` | Notification delivered successfully |
-| `failed` | Notification failed to deliver |
+| `completed` | At least one integration succeeded |
+| `failed` | All integrations failed after retries |
+| `skipped` | No integrations matched the event filters |
 
 ---
 
@@ -335,13 +341,12 @@ GET /api/v1/integrations/notifications
       "provider": "slack",
       "status": "connected",
       "notification_extension": {
-        "channel_name": "#security-alerts",
-        "notify_on_critical": true,
-        "notify_on_high": true,
-        "notify_on_medium": false,
-        "notify_on_low": false,
+        "enabled_severities": ["critical", "high"],
         "enabled_event_types": ["findings", "exposures", "alerts"],
         "min_interval_minutes": 5
+      },
+      "metadata": {
+        "channel_name": "#security-alerts"
       }
     }
   ]
@@ -389,10 +394,10 @@ POST /api/v1/integrations/{id}/test-notification
 
 Sends a test notification to verify the channel is working. Rate-limited to 30 seconds between tests.
 
-### Get Notification History
+### Get Notification Events
 
 ```http
-GET /api/v1/integrations/{id}/notification-history?limit=50
+GET /api/v1/integrations/{id}/notification-events?limit=50&offset=0
 ```
 
 ### Delete Integration

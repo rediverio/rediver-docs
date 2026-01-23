@@ -18,6 +18,7 @@ This document describes the implementation of the **Transactional Outbox Pattern
 8. [Configuration](#configuration)
 9. [Monitoring](#monitoring)
 10. [Troubleshooting](#troubleshooting)
+11. [Testing](#testing)
 
 ---
 
@@ -86,7 +87,7 @@ if s.findingNotifier != nil {
 │  1. Get all notification integrations for tenant                         │
 │  2. Filter by event_type and severity                                    │
 │  3. Send to each matching integration (Slack, Teams, Email, etc.)        │
-│  4. Record in notification_history (audit log)                           │
+│  4. Archive to notification_events (audit log)                           │
 │  5. Update outbox status (completed/failed)                              │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -364,7 +365,7 @@ CREATE INDEX idx_notification_outbox_status
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 6. Record History & Update Status                                        │
 │                                                                          │
-│    - Record each send attempt in notification_history                    │
+│    - Archive results to notification_events                              │
 │    - If at least 1 success → Mark outbox entry as COMPLETED             │
 │    - If all failed → Mark as FAILED (schedule retry with backoff)       │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -892,6 +893,115 @@ api/internal/infra/http/handler/
 
 ---
 
+## Testing
+
+### E2E Test Script
+
+Một script được cung cấp để test toàn bộ flow notification outbox từ đầu đến cuối.
+
+**Script location**: `api/scripts/test_notification_outbox_e2e.sh`
+
+#### Prerequisites
+
+- PostgreSQL client (`psql`) đã cài đặt
+- Database đang chạy (có thể dùng Docker Compose)
+- Ít nhất một notification integration đã được cấu hình cho tenant
+
+#### Docker Compose Database
+
+Nếu bạn sử dụng Docker Compose (file `api/docker-compose.yml`), database mặc định là:
+
+```
+Host:     localhost
+Port:     5432
+User:     rediver
+Password: secret
+Database: rediver
+
+DATABASE_URL: postgres://rediver:secret@localhost:5432/rediver
+```
+
+#### Cách sử dụng
+
+```bash
+# Đảm bảo script có quyền thực thi
+chmod +x api/scripts/test_notification_outbox_e2e.sh
+
+# Cách 1: Truyền DATABASE_URL trực tiếp
+./api/scripts/test_notification_outbox_e2e.sh <tenant_id> 'postgres://rediver:secret@localhost:5432/rediver'
+
+# Cách 2: Set biến môi trường trước
+export DATABASE_URL='postgres://rediver:secret@localhost:5432/rediver'
+./api/scripts/test_notification_outbox_e2e.sh <tenant_id>
+```
+
+#### Lấy Tenant ID
+
+Nếu bạn chưa biết tenant_id, có thể query database:
+
+```bash
+psql 'postgres://rediver:secret@localhost:5432/rediver' -c "SELECT id, name FROM tenants LIMIT 5;"
+```
+
+#### Script hoạt động như thế nào
+
+1. **Kiểm tra integrations**: Xác nhận tenant có notification integrations
+2. **Tạo test notification**: Insert một entry vào `notification_outbox` table
+3. **Đợi scheduler xử lý**: Poll status mỗi 2 giây, tối đa 30 giây
+4. **Kiểm tra kết quả**: Xem status và notification history
+5. **Dọn dẹp**: Xóa test data khỏi database
+
+#### Kết quả mong đợi
+
+```
+==========================================
+Notification Outbox E2E Test
+==========================================
+Tenant ID: 123e4567-e89b-12d3-a456-426614174000
+
+1. Checking tenant has notification integrations...
+   Found 2 connected notification integration(s)
+
+2. Inserting test notification into outbox...
+   Outbox entry created: abc-123-def-456
+
+3. Waiting for scheduler to process...
+   Status: PENDING (0s elapsed)...
+   Status: PROCESSING (2s elapsed)...
+   Status: COMPLETED (after 4s)
+
+4. Fetching final outbox entry details...
+   [table output]
+
+5. Checking notification history...
+   Found 2 notification history entries
+   [table output]
+
+6. Cleanup - Deleting test entries...
+   Test entries cleaned up
+
+==========================================
+Test Summary
+==========================================
+Outbox ID: abc-123-def-456
+Final Status: completed
+Integrations Found: 2
+History Entries: 2
+
+Result: SUCCESS - Notification was processed and sent
+```
+
+#### Troubleshooting
+
+| Vấn đề | Nguyên nhân | Giải pháp |
+|--------|-------------|-----------|
+| Status PENDING sau 30s | Scheduler không chạy | Kiểm tra API server đang chạy và scheduler được khởi động |
+| Status FAILED | Integration lỗi | Kiểm tra `last_error` trong outbox entry |
+| History = 0 | Không match filters | Kiểm tra event_type và severity filters trên integrations |
+| No integrations | Chưa cấu hình | Thêm notification integration qua UI hoặc API |
+
+---
+
 ## References
 
 - [Microservices.io - Transactional Outbox](https://microservices.io/patterns/data/transactional-outbox.html)
@@ -918,6 +1028,7 @@ api/internal/infra/http/handler/
 - [x] Tenant-scoped API endpoints (`/api/v1/notification-outbox`)
 - [x] API documentation
 - [x] Test script (`scripts/test_notification_outbox.sh`)
+- [x] E2E test script (`scripts/test_notification_outbox_e2e.sh`)
 
 ### Tenant UI (Completed)
 

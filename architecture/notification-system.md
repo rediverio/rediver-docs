@@ -422,27 +422,35 @@ CREATE INDEX idx_notification_extensions_event_types
 ON integration_notification_extensions USING GIN (enabled_event_types);
 ```
 
-### notification_history Table
+### notification_events Table (Replaces notification_history)
+
+> **Note:** The `notification_history` table has been removed in migration `000075`. Use `notification_events` instead.
 
 ```sql
-CREATE TABLE notification_history (
+CREATE TABLE notification_events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    integration_id UUID NOT NULL REFERENCES integrations(id) ON DELETE CASCADE,
     tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    event_type VARCHAR(100) NOT NULL,
+    aggregate_type VARCHAR(100) NOT NULL,
+    aggregate_id UUID,
     title VARCHAR(500) NOT NULL,
     body TEXT,
     severity VARCHAR(20) NOT NULL,
     url VARCHAR(2000),
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    message_id VARCHAR(500),
-    error_message TEXT,
     metadata JSONB DEFAULT '{}',
-    sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    status VARCHAR(20) NOT NULL,  -- completed, failed, skipped
+    integrations_total INT NOT NULL DEFAULT 0,
+    integrations_matched INT NOT NULL DEFAULT 0,
+    integrations_succeeded INT NOT NULL DEFAULT 0,
+    integrations_failed INT NOT NULL DEFAULT 0,
+    send_results JSONB DEFAULT '[]',  -- Array of {integration_id, name, provider, status, error, sent_at}
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    processed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_notification_history_integration ON notification_history(integration_id);
-CREATE INDEX idx_notification_history_sent_at ON notification_history(sent_at DESC);
+CREATE INDEX idx_notification_events_tenant ON notification_events(tenant_id);
+CREATE INDEX idx_notification_events_processed_at ON notification_events(processed_at DESC);
+CREATE INDEX idx_notification_events_status ON notification_events(status);
 ```
 
 ### Status Transitions
