@@ -228,20 +228,19 @@ Examples:
 
 ### Assets Module
 
-| Permission | Administrator | Member | Viewer |
-|-----------|:-------------:|:------:|:------:|
-| `assets:read` | ✅ | ✅ | ✅ |
-| `assets:write` | ✅ | ✅ | ❌ |
-| `assets:delete` | ✅ | ❌ | ❌ |
-| `assets:groups:read` | ✅ | ✅ | ✅ |
-| `assets:groups:write` | ✅ | ✅ | ❌ |
-| `assets:groups:delete` | ✅ | ❌ | ❌ |
-| `assets:repositories:read` | ✅ | ✅ | ✅ |
-| `assets:repositories:write` | ✅ | ✅ | ❌ |
-| `assets:components:read` | ✅ | ✅ | ✅ |
-| `assets:components:write` | ✅ | ✅ | ❌ |
-| `assets:branches:read` | ✅ | ✅ | ✅ |
-| `assets:branches:write` | ✅ | ✅ | ❌ |
+| Permission | Administrator | Member | Viewer | Description |
+|-----------|:-------------:|:------:|:------:|-------------|
+| `assets:read` | ✅ | ✅ | ✅ | View all asset types (domains, repos, cloud, hosts, etc.) |
+| `assets:write` | ✅ | ✅ | ❌ | Create/edit all asset types |
+| `assets:delete` | ✅ | ❌ | ❌ | Delete all asset types |
+| `assets:groups:read` | ✅ | ✅ | ✅ | View asset groups |
+| `assets:groups:write` | ✅ | ✅ | ❌ | Manage asset groups |
+| `assets:groups:delete` | ✅ | ❌ | ❌ | Delete asset groups |
+| `assets:components:read` | ✅ | ✅ | ✅ | View SBOM components |
+| `assets:components:write` | ✅ | ✅ | ❌ | Manage SBOM components |
+| `assets:components:delete` | ✅ | ❌ | ❌ | Delete SBOM components |
+
+> **Note**: `assets:*` permissions cover ALL asset types including domains, websites, services, repositories, branches, cloud resources, hosts, Kubernetes, databases, mobile apps, and APIs. Data scoping (who can see which assets) is controlled by Groups (Layer 3), not by asset-type-specific permissions.
 
 ### Findings Module
 
@@ -605,4 +604,4 @@ Start with minimal permissions and add as needed.
 
 ---
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-01-24
