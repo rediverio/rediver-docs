@@ -25,6 +25,17 @@ Technical architecture and design documentation for the Rediver CTEM Platform.
 
 ---
 
+## Access Control
+
+| Document | Description |
+|----------|-------------|
+| [Module Access Control](module-access-control.md) | Module-based access control for subscription plans |
+| [Route-Level Permission Protection](route-level-permission-protection.md) | RBAC permission middleware |
+| [Permission Realtime Sync](permission-realtime-sync.md) | Real-time permission synchronization |
+| [Module Permission Filtering](module-permission-filtering.md) | Permission-based module filtering |
+
+---
+
 ## Integration
 
 | Document | Description |
