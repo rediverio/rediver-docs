@@ -501,8 +501,104 @@ export WORKER_HEALTH_CHECK_ENABLED=false
 
 ---
 
+## Platform Agents (Managed by Rediver)
+
+For tenants who prefer not to manage their own agents, Rediver offers **Platform Agents** - shared scanning infrastructure managed by Rediver.
+
+### What are Platform Agents?
+
+Platform Agents are:
+- **Managed by Rediver** - No deployment or maintenance required
+- **Shared across tenants** - Fair queuing ensures equal access
+- **Regionally distributed** - Choose agents close to your targets
+- **Always available** - High availability with automatic failover
+
+### Using Platform Agents (Tenants)
+
+Instead of deploying your own agent, submit jobs to the platform queue:
+
+```bash
+curl -X POST /api/v1/platform-jobs \
+  -H "Authorization: Bearer $TENANT_TOKEN" \
+  -d '{
+    "type": "scan",
+    "priority": "normal",
+    "payload": {
+      "target": "example.com",
+      "tool": "nuclei"
+    },
+    "preferred_region": "us-east-1"
+  }'
+```
+
+Response:
+```json
+{
+  "job": { "id": "...", "status": "pending" },
+  "status": "queued",
+  "queue": { "position": 3 }
+}
+```
+
+### When to Use Platform Agents vs Your Own
+
+| Scenario | Recommendation |
+|----------|----------------|
+| Quick scans, ad-hoc testing | Platform Agents |
+| No infrastructure team | Platform Agents |
+| Internal network scanning | Your own agents |
+| High volume, dedicated capacity | Your own agents |
+| Regulatory requirements | Your own agents |
+
+### Deploying Platform Agents (Administrators)
+
+If you're a Rediver administrator deploying platform agents:
+
+1. **Create a Bootstrap Token**
+   ```bash
+   curl -X POST /api/v1/admin/bootstrap-tokens \
+     -H "Authorization: Bearer $ADMIN_TOKEN" \
+     -d '{
+       "description": "US-East region agents",
+       "expires_in_hours": 24,
+       "max_uses": 10,
+       "required_region": "us-east-1"
+     }'
+   ```
+
+2. **Register the Agent**
+   ```bash
+   curl -X POST /api/v1/platform-agents/register \
+     -d '{
+       "bootstrap_token": "abc123.0123456789abcdef",
+       "name": "scanner-us-east-1-01",
+       "capabilities": ["nuclei", "nmap"],
+       "tools": ["nuclei", "nmap"],
+       "region": "us-east-1",
+       "max_concurrent": 10
+     }'
+   ```
+
+3. **Configure and Start the Agent**
+   ```yaml
+   # platform-agent.yaml
+   agent:
+     name: scanner-us-east-1-01
+     is_platform_agent: true
+     heartbeat_interval: 30s
+
+   server:
+     base_url: https://api.rediver.io
+     api_key: rdv_agent_xxx  # From registration response
+   ```
+
+See [Platform Agents Feature](../features/platform-agents.md) for complete documentation.
+
+---
+
 ## Related Documentation
 
+- [Platform Agents Feature](../features/platform-agents.md)
 - [Deployment Modes](../architecture/deployment-modes.md)
 - [Server-Agent Architecture](../architecture/server-agent-command.md)
 - [SDK Development Guide](./sdk-development.md)

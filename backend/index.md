@@ -54,7 +54,20 @@ rediver/
 │   │   └── shared/          # Shared domain types (ID, errors)
 │   ├── app/                 # Application services (use cases)
 │   └── infra/               # Infrastructure adapters
-│       ├── http/            # HTTP server, router, handlers
+│       ├── http/            # HTTP server, router
+│       │   ├── routes/      # Route registration (by domain)
+│       │   │   ├── routes.go      # Main entry point
+│       │   │   ├── admin.go       # Platform admin routes
+│       │   │   ├── auth.go        # Authentication
+│       │   │   ├── tenant.go      # Tenant management
+│       │   │   ├── assets.go      # Assets, components
+│       │   │   ├── scanning.go    # Scans, agents, tools
+│       │   │   ├── exposure.go    # Findings, credentials
+│       │   │   ├── access_control.go  # Roles, permissions
+│       │   │   ├── platform.go    # Platform agents/jobs
+│       │   │   └── misc.go        # Health, docs, etc.
+│       │   ├── handler/     # Request handlers (40+)
+│       │   └── middleware/  # HTTP middleware
 │       └── postgres/        # PostgreSQL repository
 ├── pkg/                     # Public utilities
 │   ├── logger/              # Structured logging

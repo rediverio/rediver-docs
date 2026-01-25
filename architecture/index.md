@@ -16,6 +16,8 @@ Technical architecture and design documentation for the Rediver CTEM Platform.
 | Document | Description |
 |----------|-------------|
 | [Overview](overview.md) | High-level system architecture |
+| [Scan Flow Architecture](scan-flow.md) | Complete scan flow from creation to results display |
+| [Platform Agents](platform-agents-implementation-plan.md) | Hybrid agent model with tenant and platform agents |
 | [Deployment Modes](deployment-modes.md) | Standalone vs distributed deployment |
 | [Server-Agent Communication](server-agent-command.md) | Command & control protocol |
 | [Scan Pipeline Design](scan-pipeline-design.md) | Workflow execution engine |

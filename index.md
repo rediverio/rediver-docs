@@ -24,6 +24,7 @@ Welcome to the **RediverIO Platform** - a Continuous Threat Exposure Management 
 ### [🏗️ Architecture](./architecture/index.md)
 High-level system design, data flow patterns, and technology choices.
 - [System Overview](./architecture/overview.md)
+- [Scan Flow Architecture](./architecture/scan-flow.md) - Complete scan lifecycle
 - [Deployment Modes](./architecture/deployment-modes.md)
 - [Scan Pipeline Design](./architecture/scan-pipeline-design.md)
 

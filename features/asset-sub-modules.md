@@ -1,15 +1,14 @@
 ---
 layout: default
 title: Asset Sub-Modules
-parent: Architecture
-nav_order: 30
+parent: Features
+nav_order: 10
 ---
 
-# Asset Sub-Modules Implementation Plan
+# Asset Sub-Modules
 
-> **Status**: Implemented
-> **Created**: 2026-01-24
-> **Updated**: 2026-01-24
+> **Status**: ✅ Implemented
+> **Released**: 2026-01-24
 > **Author**: Claude Code
 
 ## Overview

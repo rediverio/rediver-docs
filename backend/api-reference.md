@@ -579,6 +579,71 @@ Endpoints for pushing scan results and findings into Rediver.
 
 ---
 
+## Platform Agent Endpoints
+
+Platform agents are Rediver-managed, shared scanning agents. See [Platform Agents Feature](../features/platform-agents.md) for details.
+
+### Admin Endpoints
+
+**Prefix:** `/api/v1/admin`
+
+#### Platform Agents
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/platform-agents` | Admin | List platform agents |
+| GET | `/platform-agents/stats` | Admin | Agent statistics |
+| GET | `/platform-agents/{id}` | Admin | Get platform agent |
+| POST | `/platform-agents` | Admin | Create platform agent |
+| POST | `/platform-agents/{id}/disable` | Admin | Disable agent |
+| POST | `/platform-agents/{id}/enable` | Admin | Enable agent |
+| DELETE | `/platform-agents/{id}` | Admin | Delete agent |
+
+#### Bootstrap Tokens
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/bootstrap-tokens` | Admin | List bootstrap tokens |
+| POST | `/bootstrap-tokens` | Admin | Create bootstrap token |
+| POST | `/bootstrap-tokens/{id}/revoke` | Admin | Revoke token |
+
+#### Queue Statistics
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| GET | `/platform-jobs/stats` | Admin | Queue statistics |
+
+### Public Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|:----:|-------------|
+| POST | `/api/v1/platform-agents/register` | ❌ | Agent self-registration (requires bootstrap token) |
+
+### Tenant Endpoints
+
+**Prefix:** `/api/v1/platform-jobs`
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| POST | `/` | Authenticated | Submit job to platform queue |
+| GET | `/` | Authenticated | List tenant's jobs |
+| GET | `/{id}` | Authenticated | Get job status |
+| POST | `/{id}/cancel` | Authenticated | Cancel job |
+
+### Platform Agent Endpoints (API Key Auth)
+
+**Prefix:** `/api/v1/platform-agent`
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|:----:|-------------|
+| POST | `/heartbeat` | API Key* | Record heartbeat |
+| POST | `/jobs/claim` | API Key* | Claim next job |
+| POST | `/jobs/{id}/status` | API Key* | Update job status |
+
+*Requires platform agent API key
+
+---
+
 ## Error Responses
 
 ```json
