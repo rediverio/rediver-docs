@@ -307,9 +307,9 @@ See `api/tests/load/` for rate limit and platform queue tests.
 
 - [x] Deploy Phase 1 (Security Validator) - `dbe178b`
 - [x] Monitor for validation errors in logs
-- [x] Deploy Phase 2 (Audit Logging) - pending commit
+- [x] Deploy Phase 2 (Audit Logging) - `f948d35`
 - [ ] Verify audit events in log aggregator
-- [x] Deploy Phase 3 (Rate Limiting) - pending commit
+- [x] Deploy Phase 3 (Rate Limiting) - `f948d35`
 - [ ] Monitor rate limit metrics
 
 ### Post-deployment
@@ -327,7 +327,7 @@ See `api/tests/load/` for rate limit and platform queue tests.
 |--------|-------------|-------|
 | `3dc23ae` | fix(db): change bootstrap tokens FK from users to admin_users | Pre-req |
 | `dbe178b` | feat(security): add SecurityValidator to prevent command injection | Phase 1 |
-| pending | feat(security): add audit logging and rate limiting to scan/pipeline services | Phase 2+3 |
+| `f948d35` | feat(security): add audit logging and rate limiting to scan/pipeline services | Phase 2+3 |
 
 ---
 
