@@ -1,6 +1,8 @@
 ---
-layout: home
+layout: default
 title: Rediver CTEM Platform
+nav_exclude: true
+search_exclude: true
 ---
 
 <p align="center">

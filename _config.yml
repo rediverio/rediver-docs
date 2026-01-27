@@ -10,6 +10,9 @@ plugins:
   - jekyll-seo-tag
   - jekyll-include-cache
 
+# Permalink style (clean URLs without .html)
+permalink: pretty
+
 # Just the Docs settings
 color_scheme: dark
 search_enabled: true
@@ -76,6 +79,7 @@ exclude:
   - vendor/
   - .git/
   - .github/
+  - README.md
 
 # Default front matter
 defaults:
