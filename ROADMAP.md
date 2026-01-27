@@ -6,7 +6,7 @@ nav_order: 100
 
 # Feature Roadmap
 
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-01-27
 
 This document lists all planned features that are not yet implemented. These features have been temporarily hidden from the UI navigation but are planned for future development.
 
@@ -89,10 +89,35 @@ Features are gated by subscription plan. See [Plans & Licensing](./operations/pl
 ### Mobilization
 - [x] Remediation Tasks
 - [x] Workflows
+- [x] **Workflow Automation** (NEW - 2026-01-27)
+  - [x] 8 trigger types (manual, schedule, finding_created, finding_updated, finding_age, asset_discovered, scan_completed, webhook)
+  - [x] 4 node types (Trigger, Condition, Action, Notification)
+  - [x] 12 action types (trigger_pipeline, create_ticket, http_request, etc.)
+  - [x] 5 notification channels (Slack, Email, Teams, Webhook, PagerDuty)
 
 ### Insights
 - [x] Findings Management
 - [x] Reports
+
+### Scanning
+- [x] **Quality Gates** (NEW - 2026-01-27)
+  - [x] Threshold configuration (fail_on_critical, max_high, etc.)
+  - [x] CI/CD integration (GitHub Actions, GitLab CI)
+  - [x] New findings only mode for PR checks
+- [x] **Scanner Templates** - Custom detection rules for Nuclei, Semgrep, Gitleaks
+- [x] **CTEM Finding Fields** (NEW - 2026-01-27)
+  - [x] Exposure Vector (network, local, adjacent_net, physical)
+  - [x] Remediation Context (type, fix time, complexity)
+  - [x] Business Impact (data exposure risk, compliance impact)
+
+### Infrastructure
+- [x] **Platform Agents v3.2** (NEW - 2026-01-27)
+  - [x] Kubernetes-style lease-based heartbeat
+  - [x] Bootstrap token self-registration
+  - [x] Weighted Fair Queuing (WFQ) scheduling
+  - [x] Tier-based resource isolation (shared/dedicated/premium)
+  - [x] Load balancing with CPU/memory/IO weights
+  - [x] Stuck job recovery
 
 ### Settings
 - [x] Tenant Settings
@@ -107,6 +132,14 @@ Features are gated by subscription plan. See [Plans & Licensing](./operations/pl
     - [x] Telegram
     - [x] Custom Webhook
     - [x] Severity filters (Critical, High, Medium, Low)
+
+### Platform Administration
+- [x] **Admin System** (NEW - 2026-01-27)
+  - [x] Admin User Management (super_admin, ops_admin, viewer)
+  - [x] API Key Authentication (bcrypt, 256-bit entropy)
+  - [x] Audit Logging (immutable, async)
+  - [x] Bootstrap CLI for first admin creation
+  - [x] Admin UI (login, user management, audit logs)
 
 ---
 
@@ -697,6 +730,15 @@ Features are gated by subscription plan. See [Plans & Licensing](./operations/pl
 
 ## Recent Updates
 
+### 2026-01-27
+- **Documentation Updates** - Major documentation improvements
+  - Added [Workflow Automation](./features/workflows.md) documentation
+  - Added [Quality Gates](./features/quality-gates.md) documentation
+  - Added [CTEM Finding Fields](./features/ctem-fields.md) documentation
+  - Added [Platform Agents v3.2 Architecture](./architecture/platform-agents-v3.md)
+  - Added [Admin System Architecture](./architecture/admin-system.md)
+  - Fixed Jekyll rendering issues (code block spacing, Liquid syntax)
+
 ### 2026-01-23
 - **Plan-based Module Control** - Implemented granular module access per plan tier
   - New modules: `pentest`, `remediation`, `threat_intel`, `components`, `credentials`
@@ -747,4 +789,4 @@ When implementing a new feature:
 
 ---
 
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-01-27
