@@ -19,21 +19,21 @@ Get your Rediver CTEM platform up and running quickly.
 ### 🚀 Quick Start (5 minutes)
 New to Rediver? Get the platform running in 5 minutes.
 
-**→ [Quick Start Guide](./quick-start.md)**
+**→ [Quick Start Guide]({% link getting-started/quick-start.md %})**
 
 ---
 
 ### 🔍 Run Your First Scan
 Set up an agent and scan your first repository.
 
-**→ [First Scan Tutorial](./first-scan.md)**
+**→ [First Scan Tutorial]({% link getting-started/first-scan.md %})**
 
 ---
 
 ### 🏢 For Enterprise
 Deploy Rediver in your organization with multi-tenancy.
 
-**→ [Enterprise Setup](./enterprise-setup.md)**
+**→ [Enterprise Setup]({% link getting-started/enterprise-setup.md %})**
 
 </div>
 
@@ -58,11 +58,11 @@ After completing the getting started guides:
 
 | Goal | Next Step |
 |------|-----------|
-| **Scan code** | [Scan Management Guide](../guides/scan-management.md) |
-| **Set up alerts** | [Notification Integrations](../guides/notification-integrations.md) |
-| **Add team members** | [Multi-Tenancy Guide](../guides/multi-tenancy.md) |
-| **Build custom tools** | [SDK Development Guide](../guides/sdk-development.md) |
-| **Deploy to production** | [Production Deployment](../operations/PRODUCTION_DEPLOYMENT.md) |
+| **Scan code** | [Scan Management Guide]({% link guides/scan-management.md %}) |
+| **Set up alerts** | [Notification Integrations]({% link guides/notification-integrations.md %}) |
+| **Add team members** | [Multi-Tenancy Guide]({% link guides/multi-tenancy.md %}) |
+| **Build custom tools** | [SDK Development Guide]({% link guides/sdk-development.md %}) |
+| **Deploy to production** | [Production Deployment]({% link operations/PRODUCTION_DEPLOYMENT.md %}) |
 
 ---
 
