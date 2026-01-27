@@ -262,6 +262,7 @@ curl /api/v1/scans/{scan_id} \
 
 ### GitHub Actions
 
+{% raw %}
 ```yaml
 name: Security Scan
 on: [push, pull_request]
@@ -310,6 +311,7 @@ jobs:
             exit 1
           fi
 ```
+{% endraw %}
 
 ### GitLab CI
 

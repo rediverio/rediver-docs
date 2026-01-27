@@ -92,6 +92,7 @@ NEXT_PUBLIC_BACKEND_API_URL=https://api.example.com
 ```
 
 **API Client Location:**
+
 ```
 src/lib/api/
 ├── client.ts          # API client with auth

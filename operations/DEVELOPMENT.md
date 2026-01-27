@@ -62,6 +62,7 @@ If you need to add a feature to `sdk` and use it in `api`:
     *   Commit & Push `sdk` first.
     *   Get the new `sdk` version/commit hash.
     *   Update `api/go.mod` to use the new `sdk` version:
+
         ```bash
         cd api
         go get github.com/rediverio/sdk@latest

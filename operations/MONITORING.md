@@ -530,6 +530,7 @@ rate(rediver_scans_total{status="completed"}[1h])
 ### Service Level Objectives (SLOs)
 
 **API SLO:**
+
 ```yaml
 SLO: 99.9% availability over 30 days
 Error Budget: 0.1% = 43.2 minutes downtime/month

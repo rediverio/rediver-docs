@@ -5,30 +5,18 @@ nav_exclude: true
 search_exclude: true
 ---
 
-<p align="center">
-  <img src="./images/logo.png" alt="Rediver Logo" width="200">
-</p>
+# Rediver CTEM Platform
 
-<h1 align="center">Rediver CTEM Platform</h1>
+**Continuous Threat Exposure Management Platform**
 
-<p align="center">
-  <strong>Continuous Threat Exposure Management Platform</strong><br>
-  Unified Attack Surface Management & Vulnerability Management
-</p>
+Unified Attack Surface Management & Vulnerability Management
 
-<p align="center">
-  <a href="https://github.com/rediverio/api"><img src="https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go" alt="Go Version"></a>
-  <a href="https://github.com/rediverio/ui"><img src="https://img.shields.io/badge/Next.js-16-000000?logo=next.js" alt="Next.js"></a>
-  <a href="https://hub.docker.com/u/rediverio"><img src="https://img.shields.io/badge/Docker-Hub-2496ED?logo=docker" alt="Docker"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
-</p>
+[![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go)](https://github.com/rediverio/api)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=next.js)](https://github.com/rediverio/ui)
+[![Docker](https://img.shields.io/badge/Docker-Hub-2496ED?logo=docker)](https://hub.docker.com/u/rediverio)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-<p align="center">
-  <a href="https://rediver.io">Website</a> •
-  <a href="https://app.rediver.io">Platform</a> •
-  <a href="https://api.rediver.io/docs">API Docs</a> •
-  <a href="./getting-started/">Getting Started</a>
-</p>
+[Website](https://rediver.io) | [Platform](https://app.rediver.io) | [API Docs](https://api.rediver.io/docs) | [Getting Started](./getting-started/)
 
 ---
 
@@ -204,6 +192,7 @@ We welcome contributions! Please see:
 If you find Rediver useful, consider supporting the project:
 
 **BSC Network (BEP-20):**
+
 ```
 0x97f0891b4a682904a78e6Bc854a58819Ea972454
 ```

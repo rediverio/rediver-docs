@@ -162,6 +162,7 @@ docker run -p 3001:3000 admin-ui:prod
 The admin-ui is integrated into the main platform docker-compose files in `setup/`.
 
 **Staging:**
+
 ```bash
 cd setup
 
@@ -175,6 +176,7 @@ docker compose -f docker-compose.staging.yml up -d
 ```
 
 **Production:**
+
 ```bash
 cd setup
 

@@ -312,12 +312,14 @@ permissionService.InvalidateAllUserPermissionsCache(ctx, userID)
 Redis supports two persistence modes:
 
 **1. RDB (Snapshotting)**
+
 ```ini
 # Save every 15 min if ≥1 key changed
 save 900 1
 ```
 
 **2. AOF (Append-Only File)**
+
 ```ini
 appendonly yes
 appendfsync everysec

@@ -236,6 +236,7 @@ const { data } = useAvailableCapabilities(true)
 ```
 
 **API Endpoint:**
+
 ```
 GET /api/v1/agents/available-capabilities?include_platform=true
 ```
