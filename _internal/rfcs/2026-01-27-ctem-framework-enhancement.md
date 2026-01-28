@@ -6,9 +6,9 @@
 
 ---
 
-## Phase 0 Implementation Status: ✅ COMPLETED
+## Phase 0 Implementation Status: ✅ 100% COMPLETE
 
-### Migrations Created
+### Database Migrations ✅
 | Migration | File | Status |
 |-----------|------|--------|
 | 000107 | `asset_ctem_fields` | ✅ Created |
@@ -16,16 +16,100 @@
 | 000109 | `services` | ✅ Created |
 | 000110 | `asset_state_history` | ✅ Created |
 | 000111 | `ctem_security_hardening` | ✅ Created |
+| 000113 | `rename_services_to_asset_services` | ✅ **NEW** - Rename for consistency |
 
-### Domain Entities Updated
-- ✅ `api/internal/domain/asset/entity.go` - Added CTEM fields
-- ✅ `api/internal/domain/asset/value_objects.go` - Added DataClassification, ComplianceFramework types
-- ✅ `api/internal/domain/vulnerability/finding.go` - Added exposure vector, remediation context
-- ✅ `api/internal/domain/vulnerability/value_objects.go` - Added ExposureVector, RemediationType, FixComplexity types
-- ✅ `api/internal/infra/postgres/asset_repository.go` - Updated for new CTEM fields
-- ✅ `sdk/pkg/ris/types.go` - Added AssetCompliance, ServiceInfo, FindingExposure, RemediationContext structs
+### Domain Entities ✅ Complete
+| Component | Status | Notes |
+|-----------|:------:|-------|
+| `api/internal/domain/asset/entity.go` | ✅ | Added CTEM fields |
+| `api/internal/domain/asset/value_objects.go` | ✅ | Added DataClassification, ComplianceFramework types |
+| `api/internal/domain/asset/service_extension.go` | ✅ | **NEW** - AssetService entity with Protocol, ServiceType, ServiceState |
+| `api/internal/domain/asset/service_extension_repository.go` | ✅ | **NEW** - AssetServiceRepository interface |
+| `api/internal/domain/asset/state_history.go` | ✅ | **NEW** - AssetStateChange entity with StateChangeType, ChangeSource |
+| `api/internal/domain/asset/state_history_repository.go` | ✅ | **NEW** - StateHistoryRepository interface |
+| `api/internal/domain/vulnerability/finding.go` | ✅ | Added exposure vector, remediation context |
+| `api/internal/domain/vulnerability/value_objects.go` | ✅ | Added ExposureVector, RemediationType, FixComplexity |
+| `api/internal/infra/postgres/asset_repository.go` | ✅ | Updated for new CTEM fields |
+| `sdk/pkg/ris/types.go` | ✅ | Added ServiceInfo, FindingExposure, RemediationContext |
 
-### Security Hardening (Migration 000111)
+### Architecture Decision: Extension Pattern ✅
+
+**Decision:** Services follow the same extension pattern as Repositories:
+- `asset_repositories` table → `RepositoryExtension` entity
+- `asset_services` table → `AssetService` entity
+
+**Rationale:**
+1. **Naming consistency**: `asset_services` matches `asset_repositories` pattern
+2. Services are tightly coupled to assets (1:N relationship via `asset_id`)
+3. Avoids over-engineering with separate domain package
+4. Shares value objects (Exposure, Criticality)
+5. Single package for attack surface management
+
+**Structure:**
+```
+api/internal/domain/asset/
+├── entity.go                       # Asset entity
+├── value_objects.go                # Shared value objects
+├── repository.go                   # Asset repository interface
+├── repository_extension.go         # RepositoryExtension (asset_repositories)
+├── service_extension.go            # AssetService (asset_services)
+├── service_extension_repository.go # AssetServiceRepository interface
+├── state_history.go                # AssetStateChange entity
+└── state_history_repository.go     # StateHistoryRepository interface
+```
+
+**Database Tables:**
+| Table | Domain Entity | Purpose |
+|-------|---------------|---------|
+| `assets` | `Asset` | Base asset data |
+| `asset_repositories` | `RepositoryExtension` | Repository-specific data |
+| `asset_services` | `AssetService` | Network service data |
+| `asset_state_history` | `AssetStateChange` | Audit/change tracking |
+
+### API Endpoints ✅ Complete
+| Endpoint | Status | Description |
+|----------|:------:|-------------|
+| `GET /api/v1/assets/{id}/services` | ✅ | List services for asset |
+| `POST /api/v1/assets/{id}/services` | ✅ | Add service to asset |
+| `GET /api/v1/services` | ✅ | List all services |
+| `GET /api/v1/services/{id}` | ✅ | Get service by ID |
+| `PUT /api/v1/services/{id}` | ✅ | Update service |
+| `DELETE /api/v1/services/{id}` | ✅ | Delete service |
+| `GET /api/v1/services/public` | ✅ | List internet-exposed services |
+| `GET /api/v1/services/stats` | ✅ | Get service statistics |
+| `GET /api/v1/assets/{id}/state-history` | ✅ | Get asset state changes |
+| `GET /api/v1/state-history` | ✅ | List all state changes |
+| `GET /api/v1/state-history/{id}` | ✅ | Get state change by ID |
+| `GET /api/v1/state-history/shadow-it` | ✅ | Shadow IT candidates |
+| `GET /api/v1/state-history/appearances` | ✅ | Recent appearances |
+| `GET /api/v1/state-history/disappearances` | ✅ | Recent disappearances |
+| `GET /api/v1/state-history/exposure-changes` | ✅ | Exposure changes |
+| `GET /api/v1/state-history/newly-exposed` | ✅ | Newly exposed assets |
+| `GET /api/v1/state-history/compliance` | ✅ | Compliance changes |
+| `GET /api/v1/state-history/timeline` | ✅ | Activity timeline |
+| `GET /api/v1/state-history/stats` | ✅ | State history statistics |
+
+### API Handlers ✅ Complete
+| Component | Status | Notes |
+|-----------|:------:|-------|
+| `api/internal/infra/http/handler/asset_service_handler.go` | ✅ | Full CRUD, list, stats |
+| `api/internal/infra/http/handler/asset_state_history_handler.go` | ✅ | List, shadow IT, exposure, compliance |
+| `api/internal/infra/http/routes/assets.go` | ✅ | Routes registered |
+
+### Repository Implementations ✅ Complete
+| Component | Status | Notes |
+|-----------|:------:|-------|
+| `api/internal/infra/postgres/asset_service_repository.go` | ✅ | Full CRUD, batch upsert, search, stats |
+| `api/internal/infra/postgres/asset_state_history_repository.go` | ✅ | Append-only, shadow IT detection, audit queries |
+
+### Architecture Issue ⚠️ Ingest Handler Duplication
+**Problem:** Two separate ingest handlers exist with overlapping functionality:
+- `IngestHandler` (legacy format)
+- `RISIngestHandler` (RIS format)
+
+**Solution:** See [Ingest Handler Consolidation Plan](./2026-01-27-ingest-handler-consolidation.md)
+
+### Security Hardening (Migration 000111) ✅
 Security review identified and addressed the following concerns:
 
 | Issue | Mitigation |
@@ -41,8 +125,21 @@ Security review identified and addressed the following concerns:
 - ✅ API compiles successfully
 - ✅ SDK compiles successfully
 
+### Remaining Work for Phase 0 Completion
+1. [x] ~~Create Service domain entity~~ → Created in `asset/service_extension.go` as `AssetService`
+2. [x] ~~Create Service repository interface~~ → Created in `asset/service_extension_repository.go`
+3. [x] ~~Create Asset state history entity~~ → Created in `asset/state_history.go`
+4. [x] ~~Rename services table~~ → Migration 000113 renames to `asset_services`
+5. [x] ~~Implement `postgres/asset_service_repository.go`~~ → Full implementation with batch upsert
+6. [x] ~~Implement `postgres/asset_state_history_repository.go`~~ → Full implementation with audit queries
+7. [ ] Implement Service API endpoints
+8. [ ] Implement Asset state history API endpoints
+7. [ ] Implement Asset state history API endpoints
+8. [ ] Consolidate ingest handlers (see related RFC)
+
 ### Related Documents
 - **[Platform Agent: Recon & Asset Collection](./2026-01-27-platform-agent-unified.md)** - Agent implementation details for Discovery phase
+- **[Ingest Handler Consolidation](./2026-01-27-ingest-handler-consolidation.md)** - Plan to unify duplicate ingest handlers
 
 ---
 

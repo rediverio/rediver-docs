@@ -2431,11 +2431,120 @@ docker run --rm ghcr.io/rediverio/agent:latest -check-tools
 
 ---
 
+## Agent Resource Management
+
+The SDK includes components for managing agent resources efficiently when running as a daemon.
+
+### Auto-Cleanup
+
+Prevent disk bloat by automatically cleaning up uploaded chunk data:
+
+```go
+import "github.com/rediverio/sdk/pkg/chunk"
+
+cfg := &chunk.Config{
+    AutoCleanupOnUpload:     true,   // Delete data after upload
+    CleanupOnReportComplete: true,   // Delete all when done
+    MaxStorageMB:            500,    // 500MB max storage
+    RetentionHours:          24,     // Keep data for 24h max
+    AggressiveCleanup:       true,   // Cleanup when over limit
+}
+
+manager, _ := chunk.NewManager(cfg)
+defer manager.Close()
+```
+
+### Async Upload Pipeline
+
+Separate scan and upload processes for non-blocking operations:
+
+```go
+import "github.com/rediverio/sdk/pkg/pipeline"
+
+p := pipeline.NewPipeline(&pipeline.PipelineConfig{
+    QueueSize:     1000,            // Max pending uploads
+    Workers:       3,               // Concurrent workers
+    RetryAttempts: 3,               // Retry failed uploads
+    UploadTimeout: 2 * time.Minute,
+}, uploader)
+
+p.Start(ctx)
+defer p.Stop(ctx)
+
+// Submit reports (non-blocking)
+id, _ := p.Submit(report, pipeline.WithJobID("job-123"))
+
+// Continue scanning immediately
+nextReport := scanner.Scan(target)
+
+// Get statistics
+stats := p.GetStats()
+// {Submitted: 100, Completed: 95, Failed: 2, InProgress: 3}
+```
+
+### Resource Controller
+
+Monitor CPU/memory and throttle jobs when resources are constrained:
+
+```go
+import "github.com/rediverio/sdk/pkg/resource"
+
+controller := resource.NewController(&resource.ControllerConfig{
+    CPUThreshold:      85.0,              // Pause above 85% CPU
+    MemoryThreshold:   85.0,              // Pause above 85% memory
+    MaxConcurrentJobs: runtime.NumCPU(),  // Max parallel jobs
+    SampleInterval:    5 * time.Second,
+    CooldownDuration:  30 * time.Second,
+})
+
+controller.Start(ctx)
+defer controller.Stop()
+
+// Before starting a job
+if controller.AcquireSlot(ctx) {
+    defer controller.ReleaseSlot()
+    executeJob()
+} else {
+    // Throttled - retry later
+    requeue(job)
+}
+```
+
+### Audit Logging
+
+Comprehensive structured logging for debugging and compliance:
+
+```go
+import "github.com/rediverio/sdk/pkg/audit"
+
+logger, _ := audit.NewLogger(&audit.LoggerConfig{
+    AgentID:  "agent-001",
+    TenantID: "tenant-123",
+    LogFile:  "~/.rediver/audit.log",
+    Verbose:  true,
+})
+
+logger.Start()
+defer logger.Stop()
+
+// Log events
+logger.JobStarted(jobID, "scan", nil)
+logger.JobCompleted(jobID, duration, details)
+logger.JobFailed(jobID, err, nil)
+logger.ChunkUploaded(reportID, chunkIndex, totalChunks, size)
+logger.ResourceThrottle("CPU 90% >= 85%", metrics)
+```
+
+See [Agent Resource Management Architecture](../architecture/agent-resource-management.md) for detailed documentation.
+
+---
+
 ## Related Documentation
 
 - [Docker Deployment Guide](./docker-deployment.md) - Docker images and CI/CD integration
 - [SDK & API Integration Architecture](../architecture/sdk-api-integration.md) - How SDK integrates with API
 - [Server-Agent Command Architecture](../architecture/server-agent-command.md) - Remote agent control
+- [Agent Resource Management](../architecture/agent-resource-management.md) - Auto-cleanup, pipeline, throttling
 - [Building Ingestion Tools](./building-ingestion-tools.md) - RIS schema reference
 - [API Reference](../backend/api-reference.md) - Full API documentation
 - [Authentication Guide](./authentication.md) - API key management

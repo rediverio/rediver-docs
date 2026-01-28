@@ -55,11 +55,19 @@ Response:
 ### 2. Push Data Using RIS Format
 
 ```bash
-curl -X POST https://api.rediver.io/api/v1/ingest/findings \
+curl -X POST https://api.rediver.io/api/v1/agent/ingest/ris \
   -H "Authorization: Bearer rs_live_xxxxxxxxxxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
-  -d @scan-results.json
+  -d '{"report": ...}'
 ```
+
+**Available Ingestion Endpoints:**
+| Endpoint | Format | Description |
+|----------|--------|-------------|
+| `/api/v1/agent/ingest/ris` | RIS | Native format (recommended) |
+| `/api/v1/agent/ingest/sarif` | SARIF 2.1.0 | Industry standard format |
+| `/api/v1/agent/ingest/recon` | Recon | Discovery/reconnaissance data |
+| `/api/v1/agent/ingest/check` | - | Pre-flight fingerprint check |
 
 ---
 
@@ -828,76 +836,102 @@ def map_slither_to_swc(check):
 
 ## API Reference
 
-### Register Data Source
+### Register Agent (Data Source)
 
 ```
-POST /api/v1/sources
+POST /api/v1/agents
 Authorization: Bearer <user_access_token>
 
 {
-  "name": "string",
-  "type": "scanner|collector",
-  "description": "string",
-  "capabilities": ["vulnerability", "secret", "web3", ...]
+  "name": "my-scanner",
+  "type": "scanner",
+  "description": "Custom vulnerability scanner",
+  "capabilities": ["vulnerability", "secret", "web3"]
 }
 ```
 
 Response:
 ```json
 {
-  "id": "src_abc123",
+  "id": "agt_abc123",
   "api_key": "rs_live_xxxxxxxxxxxxxxxxxxxx",
   "api_key_prefix": "rs_live_xxxx"
 }
 ```
 
-### Push Assets
+### Ingest RIS Report (Primary)
 
 ```
-POST /api/v1/ingest/assets
-Authorization: Bearer <source_api_key>
+POST /api/v1/agent/ingest/ris
+Authorization: Bearer <agent_api_key>
 Content-Type: application/json
 
 {
-  "version": "1.0",
-  "assets": [...]
+  "report": {
+    "version": "1.0",
+    "metadata": {...},
+    "tool": {...},
+    "assets": [...],
+    "findings": [...]
+  }
 }
 ```
 
-### Push Findings
+### Ingest SARIF Report
 
 ```
-POST /api/v1/ingest/findings
-Authorization: Bearer <source_api_key>
+POST /api/v1/agent/ingest/sarif
+Authorization: Bearer <agent_api_key>
+Content-Type: application/json
+
+<raw SARIF 2.1.0 JSON>
+```
+
+### Ingest Recon Data
+
+```
+POST /api/v1/agent/ingest/recon
+Authorization: Bearer <agent_api_key>
 Content-Type: application/json
 
 {
-  "version": "1.0",
-  "findings": [...]
+  "scanner_name": "subfinder",
+  "recon_type": "subdomain",
+  "target": "example.com",
+  "subdomains": [...]
+}
+```
+
+### Check Fingerprints (Deduplication)
+
+```
+POST /api/v1/agent/ingest/check
+Authorization: Bearer <agent_api_key>
+Content-Type: application/json
+
+{
+  "fingerprints": ["fp1", "fp2", "fp3"]
+}
+```
+
+Response:
+```json
+{
+  "existing": ["fp1"],
+  "missing": ["fp2", "fp3"]
 }
 ```
 
 ### Heartbeat
 
 ```
-POST /api/v1/ingest/heartbeat
-Authorization: Bearer <source_api_key>
+POST /api/v1/agent/heartbeat
+Authorization: Bearer <agent_api_key>
 
 {
   "status": "active",
   "version": "1.0.0",
   "hostname": "scanner-01"
-}
-```
-
-### Update Source Status
-
-```
-PATCH /api/v1/sources/{id}
-Authorization: Bearer <user_access_token>
-
-{
-  "status": "active|disabled"
 }
 ```
 

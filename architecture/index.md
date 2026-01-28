@@ -45,6 +45,7 @@ Agent communication and management:
 |----------|-------------|
 | [Server-Agent Communication](server-agent-command.md) | Command & control protocol |
 | [Agent Key Management](agent-key-management.md) | Authentication and key handling |
+| [Agent Resource Management](agent-resource-management.md) | Auto-cleanup, async pipeline, throttling |
 | [Platform Agents](platform-agents-implementation-plan.md) | Hybrid agent model |
 | [Platform Agents Feature](../features/platform-agents.md) | User-facing documentation |
 

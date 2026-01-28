@@ -672,10 +672,67 @@ See [Platform Administration Guide](./platform-admin.md) for complete CLI docume
 
 ---
 
+## Resource Management
+
+Agents running as daemons need to manage resources efficiently. The SDK provides:
+
+### Auto-Cleanup
+
+Uploaded chunk data is automatically cleaned up to prevent disk bloat:
+
+```yaml
+# In agent.yaml
+chunk:
+  auto_cleanup_on_upload: true     # Delete after upload
+  cleanup_on_report_complete: true # Delete all when done
+  max_storage_mb: 500              # Max storage limit
+  retention_hours: 24              # Keep for 24h max
+```
+
+### Async Upload Pipeline
+
+Scans don't block waiting for uploads. Results are queued and uploaded in the background:
+
+```yaml
+pipeline:
+  queue_size: 1000      # Max pending uploads
+  workers: 3            # Concurrent upload workers
+  retry_attempts: 3     # Retry failed uploads
+```
+
+### Resource Throttling
+
+Prevent overloading the host system:
+
+```yaml
+resource:
+  cpu_threshold: 85        # Pause new jobs above 85% CPU
+  memory_threshold: 85     # Pause new jobs above 85% memory
+  max_concurrent_jobs: 4   # Max parallel jobs
+  cooldown_duration: 30s   # Wait before resuming
+```
+
+### Audit Logging
+
+All operations are logged for debugging:
+
+```yaml
+audit:
+  log_file: ~/.rediver/audit.log
+  max_size_mb: 100
+  max_age_days: 30
+  verbose: true
+```
+
+See [Agent Resource Management](../architecture/agent-resource-management.md) for detailed documentation.
+
+---
+
 ## Related Documentation
 
 - [Platform Administration Guide](./platform-admin.md) - Admin CLI and platform management
 - [Platform Agents Feature](../features/platform-agents.md) - Detailed platform agent architecture
+- [Agent Resource Management](../architecture/agent-resource-management.md) - Auto-cleanup, async pipeline, throttling
 - [Deployment Modes](../architecture/deployment-modes.md)
 - [Server-Agent Architecture](../architecture/server-agent-command.md)
 - [SDK Development Guide](./sdk-development.md)
