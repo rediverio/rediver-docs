@@ -38,6 +38,7 @@ Configure and run security scans.
 | [Agent Usage](agent-usage.md) | CLI agent for scanning |
 | [Agent Usage: CI/CD Integration](agent-usage.md#cicd-integration) | GitHub Actions, GitLab CI templates |
 | [Rule Management](rule-management.md) | Custom rules and templates |
+| [Suppression Rules](suppression-rules.md) | Manage false positive suppressions |
 
 ---
 
