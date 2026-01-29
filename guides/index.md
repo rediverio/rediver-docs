@@ -19,6 +19,7 @@ Essential guides for platform users.
 | Guide | Description |
 |-------|-------------|
 | [End-to-End Workflow](END_TO_END_WORKFLOW.md) | Complete scan workflow from setup to remediation |
+| [Finding Ingestion Workflow](finding-ingestion-workflow.md) | How findings flow from scanners to database |
 | [Authentication](authentication.md) | Login, tokens, sessions |
 | [Multi-Tenancy](multi-tenancy.md) | Teams, tenant switching |
 | [Group-Based Access Control](group-based-access-control.md) | Groups, permission sets, team structure |
