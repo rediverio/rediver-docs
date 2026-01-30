@@ -1267,13 +1267,91 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 PRICING_URL=https://example.com/pricing
 ```
 
+## Module Caching
+
+### Overview
+
+Tenant modules are cached in Redis for performance. This avoids repeated database queries on every API request.
+
+### ModuleCacheService
+
+**Location:** `api/internal/app/module_cache_service.go`
+
+```go
+type ModuleCacheService struct {
+    cache  *redis.Cache[CachedTenantModules]
+    repo   ModuleCacheRepository
+    logger *logger.Logger
+}
+
+// Cache configuration
+const (
+    moduleCachePrefix = "tenant_modules"
+    moduleCacheTTL    = 5 * time.Minute
+)
+```
+
+### Cache Structure
+
+```go
+type CachedTenantModules struct {
+    ModuleIDs  []string                   `json:"module_ids"`
+    Modules    []*CachedModule            `json:"modules"`
+    SubModules map[string][]*CachedModule `json:"sub_modules,omitempty"`
+    EventTypes map[string][]string        `json:"event_types,omitempty"`
+    CachedAt   time.Time                  `json:"cached_at"`
+}
+```
+
+### Cache Invalidation
+
+Cache is invalidated when:
+1. **Tenant plan changes** - `LicensingService.UpdateTenantPlan()` calls `Invalidate()`
+2. **TTL expires** - Cache naturally expires after 5 minutes
+3. **Manual refresh** - `ModuleCacheService.Refresh()` for forced refresh
+
+**Invalidation with retry:**
+
+```go
+func (s *ModuleCacheService) Invalidate(ctx context.Context, tenantID string) error {
+    // 3 attempts with exponential backoff (50ms, 100ms)
+    for attempt := 1; attempt <= 3; attempt++ {
+        if err := s.cache.Delete(ctx, tenantID); err != nil {
+            if attempt < 3 {
+                time.Sleep(time.Duration(attempt*50) * time.Millisecond)
+            }
+            continue
+        }
+        return nil
+    }
+    return fmt.Errorf("failed after 3 attempts: %w", lastErr)
+}
+```
+
+### Trade-offs
+
+| Aspect | Design Decision | Rationale |
+|--------|-----------------|-----------|
+| TTL | 5 minutes | Balance between freshness and performance |
+| Invalidation failure | Log but don't fail | DB committed, cache will self-heal via TTL |
+| Race condition | Accept small window | Fixing requires distributed transaction (overkill) |
+
+### Monitoring
+
+Check cache hit/miss rates via logs:
+- `module cache hit` - Cache served request
+- `failed to cache tenant modules` - Cache write failed (degraded mode)
+- `failed to invalidate module cache` - Invalidation failed (will retry)
+
 ## References
 
 - [Stripe Subscription Documentation](https://stripe.com/docs/billing/subscriptions/overview)
 - [Stripe Checkout](https://stripe.com/docs/payments/checkout)
 - [Stripe Customer Portal](https://stripe.com/docs/billing/subscriptions/integrating-customer-portal)
 - [Stripe Webhooks](https://stripe.com/docs/webhooks)
+- [Integration Sub-Modules](../features/integration-sub-modules.md) - Sub-module system with caching
+- [Asset Sub-Modules](../features/asset-sub-modules.md) - Original sub-module implementation
 
 ---
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-01-29
